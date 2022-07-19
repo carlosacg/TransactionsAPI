@@ -77,7 +77,7 @@ def get_quantity_transaction_by_month(user_id: int):
     import calendar
 
     data_transactions = Transaction.query.with_entities(Transaction.month, func.count(
-        Transaction.id)).group_by(Transaction.month).order_by(Transaction.month).all()
+        Transaction.id)).filter(Transaction.owner_id == user_id).group_by(Transaction.month).order_by(Transaction.month).all()
     message = ''
     for transaction in data_transactions:
         message += "Number of transaction in {}: {}\n\t".format(
@@ -106,4 +106,3 @@ def send_email(receiver: str, subject_message: str, body_message: str):
     text = message.as_string()
     session.sendmail(sender, receiver, text)
     session.quit()
-    print('Mail Sent')
